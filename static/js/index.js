@@ -1,5 +1,11 @@
 $(function() {
-    $('table').DataTable();
+    $('#table-counter').DataTable({
+        order: [[1, 'desc']],  // Сортировка по количеству
+    });
+
+    $('#table-all-votes').DataTable({
+        order: [[0, 'desc']],  // Сортировка по ид
+    });
 });
 
 function add_vote(name) {
