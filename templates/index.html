@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ title }}</title>
+
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/index.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-4.4.1/bootstrap.css') }}">
+    <script src="{{ url_for('static', filename='bootstrap-4.4.1/bootstrap.bundle.js') }}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='DataTables/datatables.min.css') }}"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='DataTables/datatables.min.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-dark.min_3.0.0.css') }}"/>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4 display">
+            <h3 class="text-center">Виновники упавших сборок</h3>
+            <table class="table">
+                <caption>Виновники упавших сборок</caption>
+                <thead>
+                    <tr>
+                        <th>Кто</th>
+                        <th>Сколько</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for name, value in name_by_counter.items() %}
+                    <tr data-name="{{ name }}">
+                        <td>{{ name }}</td>
+                        <td>{{ value }}</td>
+                        <td>
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-sm"
+                                onclick="add_vote('{{ name }}')"
+                            >
+                                +
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <h3 class="text-center">Все голоса</h3>
+            <table class="table">
+                <caption>Все голоса</caption>
+                <thead>
+                    <tr>
+                        <th>Ид.</th>
+                        <th>Кто</th>
+                        <th>IP</th>
+                        <th>Хост</th>
+                        <th>Добавлено</th>
+                        <th>Отменено</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vote in all_votes %}
+                    <tr data-id="{{ vote.id }}">
+                        <td>{{ vote.id }}</td>
+                        <td>{{ vote.name.name }}</td>
+                        <td>{{ vote.sender_ip }}</td>
+                        <td>{{ vote.sender_hostname }}</td>
+                        <td>{{ vote.append_date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td>{{ vote.cancel_date and vote.cancel_date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td>
+                            <button
+                                type="button"
+                                class="btn btn-danger btn-sm"
+                                onclick="cancel_vote('{{ vote.id }}')"
+                                {% if sender_id != vote.sender_ip and sender_id not in allowed_ip_list %}
+                                disabled
+                                {% endif %}
+                            >
+                                -
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
