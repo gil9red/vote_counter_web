@@ -1,4 +1,15 @@
 $(function() {
+    function date_render(data, type, row, meta) {
+        if (data == null) {
+            return null;
+        }
+
+        if (type === 'display' || type === 'filter') {
+            return data.display;
+        }
+        return data.timestamp;
+    }
+
     $('#table-counter').DataTable({
         ajax: {
             url: "/api/counter",
@@ -28,6 +39,41 @@ $(function() {
     });
 
     $('#table-all-votes').DataTable({
+        ajax: {
+            url: "/api/all",
+            dataSrc: "", // Придет список, а не словарь
+        },
+        columns: [
+            { data: 'id' },
+            { data: 'name' },
+            { data: 'sender_ip' },
+            { data: 'sender_hostname' },
+            {
+                data: "append_date",
+                render: date_render,
+            },
+            {
+                data: "cancel_date",
+                render: date_render,
+            },
+            {
+                data: null,
+                render: (data, type, row) => {
+                    return `
+                        <button
+                            type="button"
+                            class="btn btn-danger btn-sm"
+                            onclick="cancel_vote('${row.id}')"
+                            ${row.deletion_disabled ? 'disabled' : ''}
+                        >
+                            -
+                        </button>
+                    `
+                },
+                searchable: false,
+                orderable: false,
+            },
+        ],
         order: [[0, 'desc']],  // Сортировка по ид
     });
 });

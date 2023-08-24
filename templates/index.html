@@ -20,75 +20,47 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <h3 class="w-100">Виновники упавших сборок</h3>
-        <div class="col">
-            <table id="table-counter" class="table table-striped table-bordered">
-                <caption>Виновники упавших сборок</caption>
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Кто</th>
-                        <th>Сколько</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-            </table>
+    <div class="container">
+        <div class="row">
+            <h3 class="w-100">Виновники упавших сборок</h3>
+            <div class="col">
+                <table id="table-counter" class="table table-striped table-bordered">
+                    <caption>Виновники упавших сборок</caption>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Кто</th>
+                            <th>Сколько</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col-auto">Дней без происшествий:</div>
+                    <div class="col-auto days-without-incident">-</div>
+                </div>
+            </div>
         </div>
-        <div class="col">
-            <div class="row">
-                <div class="col-auto">Дней без происшествий:</div>
-                <div class="col-auto days-without-incident">-</div>
+        <div class="row mt-5">
+            <h3 class="w-100">Все голоса</h3>
+            <div class="col">
+                <table id="table-all-votes" class="table table-striped table-bordered">
+                    <caption>Все голоса</caption>
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Ид.</th>
+                            <th>Кто</th>
+                            <th>IP</th>
+                            <th>Хост</th>
+                            <th>Добавлено</th>
+                            <th>Отменено</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
-    <div class="row mt-5">
-        <h3 class="w-100">Все голоса</h3>
-        <div class="col">
-            <table id="table-all-votes" class="table table-striped table-bordered">
-                <caption>Все голоса</caption>
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Ид.</th>
-                        <th>Кто</th>
-                        <th>IP</th>
-                        <th>Хост</th>
-                        <th>Добавлено</th>
-                        <th>Отменено</th>
-                        <th>Действия</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for vote in all_votes %}
-                    <tr
-                        data-id="{{ vote.id }}"
-                        data-append-date="{{ vote.append_date.isoformat() }}"
-                        data-cancel-date="{{ vote.cancel_date.isoformat() if vote.cancel_date else 'null' }}"
-                    >
-                        <td>{{ vote.id }}</td>
-                        <td>{{ vote.name.name }}</td>
-                        <td>{{ vote.sender_ip }}</td>
-                        <td>{{ vote.sender_hostname }}</td>
-                        <td>{{ vote.append_date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
-                        <td>{{ vote.cancel_date and vote.cancel_date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
-                        <td>
-                            <button
-                                type="button"
-                                class="btn btn-danger btn-sm"
-                                onclick="cancel_vote('{{ vote.id }}')"
-                                {% if sender_id != vote.sender_ip and sender_id not in allowed_ip_list %}
-                                disabled
-                                {% endif %}
-                            >
-                                -
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 </body>
 </html>

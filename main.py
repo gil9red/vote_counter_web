@@ -4,8 +4,8 @@
 __author__ = "ipetrash"
 
 
-import logging
 import os.path
+from datetime import datetime
 
 from flask import Flask, render_template, request, jsonify, send_from_directory
 
@@ -17,24 +17,22 @@ from db import Vote, VoteName
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
-# TODO:
-# logging.basicConfig(level=logging.DEBUG)
+
+def get_datetime_dict(dt: datetime | None) -> dict[str, str | int] | None:
+    if not dt:
+        return
+
+    return {
+        "display": dt.strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": int(dt.timestamp()),
+    }
 
 
 @app.route("/")
 def index():
-    name_by_counter: dict[str, int] = {
-        name: len(VoteName.add(name).get_actual_votes())
-        for name in VOTE_NAMES
-    }
-
     return render_template(
         "index.html",
         title=DIR.name,
-        name_by_counter=name_by_counter,
-        all_votes=Vote.select(),
-        sender_id=get_ip(request),
-        allowed_ip_list=ALLOWED_IP_LIST,
     )
 
 
@@ -68,11 +66,29 @@ def cancel_vote():
 @app.route("/api/counter")
 def api_counter():
     return jsonify([
-        dict(
-            name=name,
-            counter=len(VoteName.add(name).get_actual_votes()),
-        )
+        {
+            "name": name,
+            "counter": len(VoteName.add(name).get_actual_votes()),
+        }
         for name in VOTE_NAMES
+    ])
+
+
+@app.route("/api/all")
+def api_all():
+    sender_ip = get_ip(request)
+
+    return jsonify([
+        {
+            "id": vote.id,
+            "name": vote.name.name,
+            "sender_ip": vote.sender_ip,
+            "sender_hostname": vote.sender_hostname,
+            "append_date": get_datetime_dict(vote.append_date),
+            "cancel_date": get_datetime_dict(vote.cancel_date),
+            "deletion_disabled": sender_ip != vote.sender_ip and sender_ip not in ALLOWED_IP_LIST,
+        }
+        for vote in Vote.select()
     ])
 
 
