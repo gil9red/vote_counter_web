@@ -1,15 +1,20 @@
-$(function() {
-    function date_render(data, type, row, meta) {
-        if (data == null) {
-            return null;
-        }
+function getDiffInDays(date_1, date_2) {
+    let difference = date_1.getTime() - date_2.getTime();
+    return Math.ceil(difference / (1000 * 3600 * 24));
+}
 
-        if (type === 'display' || type === 'filter') {
-            return data.display;
-        }
-        return data.timestamp;
+function date_render(data, type, row, meta) {
+    if (data == null) {
+        return null;
     }
 
+    if (type === 'display' || type === 'filter') {
+        return data.display;
+    }
+    return data.timestamp;
+}
+
+$(function() {
     $('#table-counter').DataTable({
         ajax: {
             url: "/api/counter",
@@ -75,6 +80,27 @@ $(function() {
             },
         ],
         order: [[0, 'desc']],  // Сортировка по ид
+        initComplete: function () {
+            // Берем первую строку без даты отмены
+            let row = this
+                .api()
+                .rows({ order: 'current' })
+                .data()
+                .filter((value, index) => {
+                    return value.cancel_date == null;
+                })
+                .shift()
+            ;
+            if (row == null) {
+                return;
+            }
+
+            let now = new Date();
+            let appendDate = new Date(row.append_date.timestamp * 1000);
+
+            let daysWithoutIncident = getDiffInDays(now, appendDate);
+            $(".days-without-incident").text(daysWithoutIncident);
+        },
     });
 });
 
