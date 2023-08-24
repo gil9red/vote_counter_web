@@ -1,5 +1,29 @@
 $(function() {
     $('#table-counter').DataTable({
+        ajax: {
+            url: "/api/counter",
+            dataSrc: "", // Придет список, а не словарь
+        },
+        columns: [
+            { data: 'name' },
+            { data: 'counter' },
+            {
+                data: 'name',
+                render: (data, type, row) => {
+                    return `
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                            onclick="add_vote('${data}')"
+                        >
+                            +
+                        </button>
+                    `
+                },
+                searchable: false,
+                orderable: false,
+            },
+        ],
         order: [[1, 'desc']],  // Сортировка по количеству
     });
 

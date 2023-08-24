@@ -15,6 +15,7 @@ from db import Vote, VoteName
 
 
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 
 # TODO:
 # logging.basicConfig(level=logging.DEBUG)
@@ -62,6 +63,17 @@ def cancel_vote():
     vote.cancel(sender_ip=get_ip(request))
 
     return jsonify({"ok": True})
+
+
+@app.route("/api/counter")
+def api_counter():
+    return jsonify([
+        dict(
+            name=name,
+            counter=len(VoteName.add(name).get_actual_votes()),
+        )
+        for name in VOTE_NAMES
+    ])
 
 
 @app.route("/favicon.ico")
