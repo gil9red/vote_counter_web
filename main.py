@@ -86,7 +86,16 @@ def api_all():
             "sender_hostname": vote.sender_hostname,
             "append_date": get_datetime_dict(vote.append_date),
             "cancel_date": get_datetime_dict(vote.cancel_date),
-            "deletion_disabled": sender_ip != vote.sender_ip and sender_ip not in ALLOWED_IP_LIST,
+            "deletion_disabled": (
+                # Если уже отменено
+                vote.cancel_date is not None
+                or (
+                    # IP отправителя не совпадает с тем, кто поставил
+                    # и IP отправителя отсутствует в разрешенном списке
+                    sender_ip != vote.sender_ip
+                    and sender_ip not in ALLOWED_IP_LIST
+                )
+            ),
         }
         for vote in Vote.select()
     ])
