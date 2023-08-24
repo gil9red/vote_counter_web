@@ -64,6 +64,14 @@ def cancel_vote():
     return jsonify({"ok": True})
 
 
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(
+        os.path.join(app.root_path, "static/img"),
+        "emoji__do_not_litter.png",
+    )
+
+
 if __name__ == "__main__":
     # Localhost
     app.debug = True
