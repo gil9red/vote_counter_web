@@ -5,8 +5,9 @@ __author__ = "ipetrash"
 
 
 import logging
+import os.path
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 
 from config import DIR, PORT, VOTE_NAMES, ALLOWED_IP_LIST
 from utils import get_ip, get_hostname
@@ -14,7 +15,9 @@ from db import Vote, VoteName
 
 
 app = Flask(__name__)
-logging.basicConfig(level=logging.DEBUG)
+
+# TODO:
+# logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route("/")
