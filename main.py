@@ -15,7 +15,7 @@ from db import Vote, VoteName
 
 
 app = Flask(__name__)
-app.config['JSON_SORT_KEYS'] = False
+app.json.sort_keys = False
 
 
 def get_datetime_dict(dt: datetime | None) -> dict[str, str | int] | None:
