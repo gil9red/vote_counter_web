@@ -112,6 +112,7 @@ $(function() {
             },
         ],
         order: [[1, 'desc']],  // Сортировка по количеству
+        language: DATATABLES_LANG_RU,
     });
 
     window.tableAllVotes = $('#table-all-votes').DataTable({
@@ -151,6 +152,7 @@ $(function() {
             },
         ],
         order: [[0, 'desc']],  // Сортировка по ид
+        language: DATATABLES_LANG_RU,
         createdRow: (row, data, dataIndex) => {
             // Выделение серым цветом строки с отмененным голосом
             if (data.cancel_date != null) {
