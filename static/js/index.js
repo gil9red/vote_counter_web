@@ -80,6 +80,12 @@ $(function() {
             },
         ],
         order: [[0, 'desc']],  // Сортировка по ид
+        createdRow: (row, data, dataIndex) => {
+            // Выделение серым цветом строки с отмененным голосом
+            if (data.cancel_date != null) {
+                $(row).addClass('text-secondary');
+            }
+        },
         initComplete: function () {
             // Берем первую строку без даты отмены
             let row = this
