@@ -14,8 +14,79 @@ function date_render(data, type, row, meta) {
     return data.timestamp;
 }
 
+function ajaxSuccess(data) {
+    console.log("success");
+    console.log(data);
+
+    window.tableCounter.ajax.reload();
+    window.tableAllVotes.ajax.reload(setDaysWithoutIncident);
+}
+
+function ajaxError(data) {
+    console.log("error");
+    console.log(data);
+}
+
+
+function add_vote(name, table) {
+    console.log("call add_vote()");
+
+    $.ajax({
+        url: "/add-vote",
+        method: "POST",  // HTTP метод, по умолчанию GET
+        data: JSON.stringify({name: name}),
+
+        contentType: "application/json",
+        dataType: "json",  // тип данных загружаемых с сервера
+
+        success: ajaxSuccess,
+        error: ajaxError,
+    });
+}
+
+function cancel_vote(voteId, table) {
+    console.log("call cancel_vote()");
+
+    $.ajax({
+        url: "/cancel-vote",
+        method: "POST",  // HTTP метод, по умолчанию GET
+        data: JSON.stringify({id: voteId}),
+
+        contentType: "application/json",
+        dataType: "json",  // тип данных загружаемых с сервера
+
+        success: ajaxSuccess,
+        error: ajaxError,
+    });
+}
+
+function setDaysWithoutIncident() {
+    // Берем первую строку без даты отмены
+    let row = window.tableAllVotes
+        .rows()
+        .data()
+        .sort((data1, data2) => {
+            // Сортировка от большего к меньшему
+            return data2.id - data1.id;
+        })
+        .filter((value, index) => {
+            return value.cancel_date == null;
+        })
+        .shift()
+    ;
+    if (row == null) {
+        return;
+    }
+
+    let now = new Date();
+    let appendDate = new Date(row.append_date.timestamp * 1000);
+
+    let daysWithoutIncident = getDiffInDays(now, appendDate);
+    $(".days-without-incident").text(daysWithoutIncident);
+}
+
 $(function() {
-    $('#table-counter').DataTable({
+    window.tableCounter = $('#table-counter').DataTable({
         ajax: {
             url: "/api/counter",
             dataSrc: "", // Придет список, а не словарь
@@ -43,7 +114,7 @@ $(function() {
         order: [[1, 'desc']],  // Сортировка по количеству
     });
 
-    $('#table-all-votes').DataTable({
+    window.tableAllVotes = $('#table-all-votes').DataTable({
         ajax: {
             url: "/api/all",
             dataSrc: "", // Придет список, а не словарь
@@ -87,77 +158,7 @@ $(function() {
             }
         },
         initComplete: function () {
-            // Берем первую строку без даты отмены
-            let row = this
-                .api()
-                .rows({ order: 'current' })
-                .data()
-                .filter((value, index) => {
-                    return value.cancel_date == null;
-                })
-                .shift()
-            ;
-            if (row == null) {
-                return;
-            }
-
-            let now = new Date();
-            let appendDate = new Date(row.append_date.timestamp * 1000);
-
-            let daysWithoutIncident = getDiffInDays(now, appendDate);
-            $(".days-without-incident").text(daysWithoutIncident);
+            setDaysWithoutIncident();
         },
     });
 });
-
-function add_vote(name) {
-    console.log("call add_vote()");
-
-    $.ajax({
-        url: "/add-vote",
-        method: "POST",  // HTTP метод, по умолчанию GET
-        data: JSON.stringify({name: name}),
-
-        contentType: "application/json",
-        dataType: "json",  // тип данных загружаемых с сервера
-
-        success: function(data) {
-            console.log("success");
-            console.log(data);
-
-            // TODO:
-            location.reload();
-        },
-
-        error: function(data) {
-            console.log("error");
-            console.log(data);
-        }
-    });
-}
-
-function cancel_vote(voteId) {
-    console.log("call cancel_vote()");
-
-    $.ajax({
-        url: "/cancel-vote",
-        method: "POST",  // HTTP метод, по умолчанию GET
-        data: JSON.stringify({id: voteId}),
-
-        contentType: "application/json",
-        dataType: "json",  // тип данных загружаемых с сервера
-
-        success: function(data) {
-            console.log("success");
-            console.log(data);
-
-            // TODO:
-            location.reload();
-        },
-
-        error: function(data) {
-            console.log("error");
-            console.log(data);
-        }
-    });
-}
