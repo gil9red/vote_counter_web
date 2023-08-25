@@ -109,6 +109,7 @@ $(function() {
                 },
                 searchable: false,
                 orderable: false,
+                width: "50px",
             },
         ],
         order: [[1, 'desc']],  // Сортировка по количеству
@@ -154,6 +155,7 @@ $(function() {
                 },
                 searchable: false,
                 orderable: false,
+                width: "50px",
             },
         ],
         order: [[0, 'desc']],  // Сортировка по ид
