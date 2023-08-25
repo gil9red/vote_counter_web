@@ -2,7 +2,7 @@
 DATATABLES_LANG_RU = {
     "processing": "Подождите...",
     "search": "Поиск:",
-    "lengthMenu": "Показать _MENU_ записей",
+    "lengthMenu": "Показать _MENU_",  // NOTE: Updated by ipetrash
     "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
     "infoEmpty": "Записи с 0 до 0 из 0 записей",
     "infoFiltered": "(отфильтровано из _MAX_ записей)",

@@ -112,6 +112,11 @@ $(function() {
             },
         ],
         order: [[1, 'desc']],  // Сортировка по количеству
+        lengthMenu: [
+            [5, 10, 25, 50, -1],
+            [5, 10, 25, 50, "все"],
+        ],
+        pageLength: -1,
         language: DATATABLES_LANG_RU,
     });
 
@@ -153,6 +158,10 @@ $(function() {
         ],
         order: [[0, 'desc']],  // Сортировка по ид
         language: DATATABLES_LANG_RU,
+        lengthMenu: [
+            [5, 10, 25, 50, -1],
+            [5, 10, 25, 50, "все"],
+        ],
         createdRow: (row, data, dataIndex) => {
             // Выделение серым цветом строки с отмененным голосом
             if (data.cancel_date != null) {
