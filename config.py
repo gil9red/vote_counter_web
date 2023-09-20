@@ -4,6 +4,7 @@
 __author__ = "ipetrash"
 
 
+import json
 from pathlib import Path
 
 
@@ -25,6 +26,12 @@ VOTE_NAMES = [
     "TXDC",
     "TXCORE",
 ]
+
+IP_BY_SENDER_HOSTNAME_FILE_NAME = DIR / "IP_BY_SENDER_HOSTNAME.json"
+IP_BY_SENDER_HOSTNAME = json.loads(
+    IP_BY_SENDER_HOSTNAME_FILE_NAME.read_text("utf-8")
+)
+
 ALLOWED_IP_LIST = [
     "127.0.0.1",
 ]

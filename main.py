@@ -9,7 +9,7 @@ from datetime import datetime
 
 from flask import Flask, render_template, request, jsonify, send_from_directory
 
-from config import DIR, PORT, VOTE_NAMES, ALLOWED_IP_LIST
+from config import DIR, PORT, VOTE_NAMES, ALLOWED_IP_LIST, IP_BY_SENDER_HOSTNAME
 from utils import get_ip, get_hostname
 from db import Vote, VoteName
 
@@ -83,7 +83,7 @@ def api_all():
             "id": vote.id,
             "name": vote.name.name,
             "sender_ip": vote.sender_ip,
-            "sender_hostname": vote.sender_hostname,
+            "sender_hostname": IP_BY_SENDER_HOSTNAME.get(vote.sender_ip, vote.sender_hostname),
             "append_date": get_datetime_dict(vote.append_date),
             "cancel_date": get_datetime_dict(vote.cancel_date),
             "deletion_disabled": (
