@@ -5,6 +5,8 @@ __author__ = "ipetrash"
 
 
 import json
+import os
+
 from pathlib import Path
 
 
@@ -35,3 +37,7 @@ IP_BY_SENDER_HOSTNAME = json.loads(
 ALLOWED_IP_LIST = [
     "127.0.0.1",
 ]
+
+ONLY_ALLOWED_IP_LIST_MAY_VOTE = False
+if value := os.environ.get("ONLY_ALLOWED_IP_LIST_MAY_VOTE"):
+    ONLY_ALLOWED_IP_LIST_MAY_VOTE = value.lower() == "true"

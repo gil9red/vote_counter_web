@@ -20,7 +20,7 @@ from peewee import (
 from playhouse.shortcuts import model_to_dict
 from playhouse.sqliteq import SqliteQueueDatabase
 
-from config import DB_FILE_NAME, ALLOWED_IP_LIST
+from config import DB_FILE_NAME, ALLOWED_IP_LIST, ONLY_ALLOWED_IP_LIST_MAY_VOTE
 from third_party.shorten import shorten
 
 
@@ -129,6 +129,9 @@ class Vote(BaseModel):
 
     @classmethod
     def add(cls, name: str, sender_ip: str, sender_hostname: str = None) -> "Vote":
+        if ONLY_ALLOWED_IP_LIST_MAY_VOTE and sender_ip not in ALLOWED_IP_LIST:
+            raise Exception("Добавление голоса запрещена!")
+
         return cls.create(
             name=VoteName.add(name),
             sender_ip=sender_ip,

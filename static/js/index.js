@@ -28,11 +28,11 @@ function ajaxError(data) {
 }
 
 
-function add_vote(name, table) {
+function add_vote(name) {
     console.log("call add_vote()");
 
     $.ajax({
-        url: "/add-vote",
+        url: "/api/add-vote",
         method: "POST",  // HTTP метод, по умолчанию GET
         data: JSON.stringify({name: name}),
 
@@ -44,11 +44,11 @@ function add_vote(name, table) {
     });
 }
 
-function cancel_vote(voteId, table) {
+function cancel_vote(voteId) {
     console.log("call cancel_vote()");
 
     $.ajax({
-        url: "/cancel-vote",
+        url: "/api/cancel-vote",
         method: "POST",  // HTTP метод, по умолчанию GET
         data: JSON.stringify({id: voteId}),
 
@@ -102,6 +102,7 @@ $(function() {
                             type="button"
                             class="btn btn-primary btn-sm"
                             onclick="add_vote('${data}')"
+                            ${row.append_disabled ? 'disabled' : ''}
                         >
                             +
                         </button>
