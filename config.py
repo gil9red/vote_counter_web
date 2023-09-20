@@ -30,13 +30,14 @@ VOTE_NAMES = [
 ]
 
 IP_BY_SENDER_HOSTNAME_FILE_NAME = DIR / "IP_BY_SENDER_HOSTNAME.json"
-IP_BY_SENDER_HOSTNAME = json.loads(
+IP_BY_SENDER_HOSTNAME: dict[str, str] = json.loads(
     IP_BY_SENDER_HOSTNAME_FILE_NAME.read_text("utf-8")
 )
 
-ALLOWED_IP_LIST = [
-    "127.0.0.1",
-]
+ALLOWED_IP_LIST_FILE_NAME = DIR / "ALLOWED_IP_LIST.json"
+ALLOWED_IP_LIST: list[str] = json.loads(
+    ALLOWED_IP_LIST_FILE_NAME.read_text("utf-8")
+)
 
 ONLY_ALLOWED_IP_LIST_MAY_VOTE = False
 if value := os.environ.get("ONLY_ALLOWED_IP_LIST_MAY_VOTE"):
