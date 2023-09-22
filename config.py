@@ -17,7 +17,7 @@ DB_DIR_NAME.mkdir(parents=True, exist_ok=True)
 
 DB_FILE_NAME = DB_DIR_NAME / "db.sqlite"
 
-PORT = 10000
+PORT = int(os.environ.get("FLASK_RUN_PORT", 10000))
 
 VOTE_NAMES = [
     "TXI",
