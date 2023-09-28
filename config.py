@@ -12,7 +12,7 @@ from pathlib import Path
 
 DIR = Path(__file__).resolve().parent
 
-DB_DIR_NAME = DIR / "database"
+DB_DIR_NAME = Path(os.environ.get("DB_DIRECTORY_PATH", DIR)) / "database"
 DB_DIR_NAME.mkdir(parents=True, exist_ok=True)
 
 DB_FILE_NAME = DB_DIR_NAME / "db.sqlite"
