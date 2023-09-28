@@ -35,9 +35,12 @@ IP_BY_SENDER_HOSTNAME: dict[str, str] = json.loads(
 )
 
 ALLOWED_IP_LIST_FILE_NAME = DIR / "ALLOWED_IP_LIST.json"
-ALLOWED_IP_LIST: list[str] = json.loads(
-    ALLOWED_IP_LIST_FILE_NAME.read_text("utf-8")
-)
+if value := os.environ.get("ALLOWED_IP_LIST"):
+    ALLOWED_IP_LIST: list[str] = value.split(",")
+else:
+    ALLOWED_IP_LIST: list[str] = json.loads(
+        ALLOWED_IP_LIST_FILE_NAME.read_text("utf-8")
+    )
 
 ONLY_ALLOWED_IP_LIST_MAY_VOTE = False
 if value := os.environ.get("ONLY_ALLOWED_IP_LIST_MAY_VOTE"):
