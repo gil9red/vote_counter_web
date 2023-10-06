@@ -20,7 +20,7 @@ from peewee import (
 from playhouse.shortcuts import model_to_dict
 from playhouse.sqliteq import SqliteQueueDatabase
 
-from config import DB_FILE_NAME, ALLOWED_IP_LIST, ONLY_ALLOWED_IP_LIST_MAY_VOTE
+from config import DB_FILE_NAME
 from third_party.shorten import shorten
 
 
@@ -122,26 +122,18 @@ class VoteName(BaseModel):
 
 class Vote(BaseModel):
     name = ForeignKeyField(VoteName, backref="votes")
-    sender_ip = TextField()
-    sender_hostname = TextField(null=True)
+    sender_login = TextField()
     append_date = DateTimeField(default=datetime.now)
     cancel_date = DateTimeField(null=True)
 
     @classmethod
-    def add(cls, name: str, sender_ip: str, sender_hostname: str = None) -> "Vote":
-        if ONLY_ALLOWED_IP_LIST_MAY_VOTE and sender_ip not in ALLOWED_IP_LIST:
-            raise Exception("Добавление голоса запрещена!")
-
+    def add(cls, name: str, sender_login: str) -> "Vote":
         return cls.create(
             name=VoteName.add(name),
-            sender_ip=sender_ip,
-            sender_hostname=sender_hostname,
+            sender_login=sender_login,
         )
 
-    def cancel(self, sender_ip: str):
-        if sender_ip != self.sender_ip and sender_ip not in ALLOWED_IP_LIST:
-            raise Exception("Отмена голоса запрещена!")
-
+    def cancel(self):
         self.cancel_date = datetime.now()
         self.save()
 

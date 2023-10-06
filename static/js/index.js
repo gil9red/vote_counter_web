@@ -1,3 +1,8 @@
+$.noty.defaults.theme = 'defaultTheme';
+$.noty.defaults.layout = 'bottomRight';
+$.noty.defaults.timeout = 6000;
+
+
 function getDiffInDays(date_1, date_2) {
     let difference = date_1.getTime() - date_2.getTime();
     return Math.floor(difference / (1000 * 3600 * 24));
@@ -27,6 +32,12 @@ function ajaxError(data) {
     console.log(data);
 }
 
+function showError(text) {
+    noty({
+        text: text,
+        type: 'error',
+    });
+}
 
 function add_vote(name) {
     console.log("call add_vote()");
@@ -86,6 +97,37 @@ function setDaysWithoutIncident() {
 }
 
 $(function() {
+    $("#modelLogin form").submit(function() {
+        let thisForm = this;
+
+        let url = $(this).attr("action");
+        let method = $(this).attr("method");
+        if (method === undefined) {
+            method = "get";
+        }
+
+        let data = $(this).serialize();
+
+        $.ajax({
+            url: url,
+            method: method,  // HTTP метод, по умолчанию GET
+            data: data,
+            dataType: "json",  // Тип данных загружаемых с сервера
+            success: function(data) {
+                if (data.ok) {
+                    // Очищение полей формы
+                    thisForm.reset();
+                    location.reload();
+                } else {
+                    showError(data.error);
+                }
+            },
+            error: data => showError('Неизвестная ошибка при логине'),
+        });
+
+        return false;
+    });
+
     window.tableCounter = $('#table-counter').DataTable({
         ajax: {
             url: "/api/counter",
@@ -130,8 +172,7 @@ $(function() {
         columns: [
             { data: 'id' },
             { data: 'name' },
-            { data: 'sender_ip' },
-            { data: 'sender_hostname' },
+            { data: 'sender_login' },
             {
                 data: "append_date",
                 render: date_render,

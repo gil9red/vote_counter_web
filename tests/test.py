@@ -5,7 +5,6 @@ __author__ = "ipetrash"
 
 
 import unittest
-from datetime import datetime
 
 from peewee import SqliteDatabase
 
@@ -13,7 +12,6 @@ from db import (
     BaseModel,
     VoteName,
     Vote,
-    db,
 )
 
 
@@ -34,11 +32,8 @@ class TestCaseDB(unittest.TestCase):
             [vote1, vote2], votes
         )
 
-        with self.assertRaises(Exception):
-            vote1.cancel(sender_ip="0.0.0.0")
-
         self.assertIsNone(vote1.cancel_date)
-        vote1.cancel(sender_ip=vote1.sender_ip)
+        vote1.cancel()
         self.assertIsNotNone(vote1.cancel_date)
 
         votes = VoteName.get_by("Foo").get_actual_votes()

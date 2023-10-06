@@ -4,7 +4,6 @@
 __author__ = "ipetrash"
 
 
-import json
 import os
 
 from pathlib import Path
@@ -31,19 +30,7 @@ VOTE_NAMES = [
     "TXCORE",
 ]
 
-IP_BY_SENDER_HOSTNAME_FILE_NAME = DIR / "IP_BY_SENDER_HOSTNAME.json"
-IP_BY_SENDER_HOSTNAME: dict[str, str] = json.loads(
-    IP_BY_SENDER_HOSTNAME_FILE_NAME.read_text("utf-8")
-)
+LOGIN = os.environ.get("ADMIN_LOGIN", "admin")
+PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin")
 
-ALLOWED_IP_LIST_FILE_NAME = DIR / "ALLOWED_IP_LIST.json"
-if value := os.environ.get("ALLOWED_IP_LIST"):
-    ALLOWED_IP_LIST: list[str] = value.split(",")
-else:
-    ALLOWED_IP_LIST: list[str] = json.loads(
-        ALLOWED_IP_LIST_FILE_NAME.read_text("utf-8")
-    )
-
-ONLY_ALLOWED_IP_LIST_MAY_VOTE = False
-if value := os.environ.get("ONLY_ALLOWED_IP_LIST_MAY_VOTE"):
-    ONLY_ALLOWED_IP_LIST_MAY_VOTE = value.lower() == "true"
+SECRET_KEY = os.environ.get("SECRET_KEY", "super secret string")
