@@ -78,7 +78,7 @@ def get_datetime_dict(dt: datetime | None) -> dict[str, str | int] | None:
 def index():
     return flask.render_template(
         "index.html",
-        title=DIR.name,
+        title="vote_counter_web",
     )
 
 
