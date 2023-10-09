@@ -19,6 +19,7 @@ DB_DIR_NAME.mkdir(parents=True, exist_ok=True)
 DB_FILE_NAME = DB_DIR_NAME / "db.sqlite"
 
 PORT = int(os.environ.get("FLASK_RUN_PORT", 10000))
+SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", "super secret string")
 
 VOTE_NAMES = [
     "TXI",
@@ -32,5 +33,3 @@ VOTE_NAMES = [
 
 LOGIN = os.environ.get("ADMIN_LOGIN", "admin")
 PASSWORD = os.environ.get("ADMIN_PASSWORD", "admin")
-
-SECRET_KEY = os.environ.get("SECRET_KEY", "super secret string")
