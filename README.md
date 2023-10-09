@@ -13,7 +13,7 @@
 # Docker
 ## Сборка образа
 ```
-docker build -t vote_counter_web .
+docker build --tag vote_counter_web .
 ```
 ## Запуск контейнера
 ```
